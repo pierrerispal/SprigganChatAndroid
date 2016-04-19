@@ -10,94 +10,68 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.pierre.sprigganchat.Connection"
-    tools:showIn="@layout/activity_connection">
+    tools:showIn="@layout/activity_connection"
+    android:background="@color/colorPrimary">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/AppTheme"
-        android:background="@color/colorAccent"
-        android:weightSum="1"
-        android:id="@+id/linearLayout"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="75dp">
+        android:weightSum="1">
 
         <Space
             android:layout_width="20px"
-            android:layout_height="20px" />
+            android:layout_height="30dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/spriggan" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Spriggan Chat"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:textSize="30dp" />
+
+        <Space
+            android:layout_width="20px"
+            android:layout_height="60dp" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
 
             <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nickname : "
-                android:id="@+id/textView2"
-                android:textColor="#ffffff" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText"
-                android:layout_weight="1"
-                android:background="#ffffff"
-                android:textColor="@color/colorPrimaryDark"
-                android:inputType="text|textNoSuggestions" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-        </LinearLayout>
-
-        <Space
-            android:layout_width="20px"
-            android:layout_height="20px" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Channel : "
-                android:id="@+id/textView"
-                android:textColor="#ffffff" />
-
-            <Space
-                android:layout_width="20px"
+                android:layout_width="40dp"
                 android:layout_height="20px" />
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/editText_nickname"
-                android:layout_weight="0.94"
-                android:background="#ffffff"
-                android:textColor="@color/colorPrimaryDark"
-                android:inputType="text|textNoSuggestions" />
+                android:layout_weight="1"
+                android:textColor="#ffffff"
+                android:hint="Nickname"
+                android:textColorHint="#b9b9b9"
+                android:textIsSelectable="false"
+                android:singleLine="false"
+                android:inputType="text|textNoSuggestions|none"
+                android:theme="@style/Theme.App.Base"
+                android:textSize="20dp" />
 
             <Space
-                android:layout_width="20px"
+                android:layout_width="40dp"
                 android:layout_height="20px" />
         </LinearLayout>
 
@@ -105,30 +79,63 @@
             android:layout_width="20px"
             android:layout_height="20px" />
 
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=" Connection "
-            android:id="@+id/button"
+            android:layout_gravity="center_horizontal" >
+
+            <Space
+                android:layout_width="40dp"
+                android:layout_height="20px" />
+
+            <EditText
+                android:theme="@style/Theme.App.Base"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText_channel"
+                android:layout_weight="1"
+                android:textColor="#ffffff"
+                android:hint="Channel"
+                android:textColorHint="#b9b9b9"
+                android:textIsSelectable="false"
+                android:singleLine="false"
+                android:inputType="text|textNoSuggestions|none"
+                android:textSize="20dp" />
+
+            <Space
+                android:layout_width="40dp"
+                android:layout_height="20px" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="20px"
+            android:layout_height="40dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@color/colorPrimaryDark" />
+            android:weightSum="1">
 
-        <Space
-            android:layout_width="20px"
-            android:layout_height="20px" />
+            <Space
+                android:layout_width="40dp"
+                android:layout_height="20px" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:layout_below="@+id/linearLayout"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/spriggan"
-            android:layout_gravity="center_horizontal" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connection"
+                android:id="@+id/button_connection"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
 
-        <Space
-            android:layout_width="20px"
-            android:layout_height="20px" />
+            <Space
+                android:layout_width="40dp"
+                android:layout_height="20px" />
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>
