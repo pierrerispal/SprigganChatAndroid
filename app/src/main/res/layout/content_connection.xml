@@ -10,6 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.pierre.sprigganchat.Connection"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:showIn="@layout/activity_connection"
     android:background="@color/colorPrimary">
 
@@ -24,7 +26,7 @@
 
         <Space
             android:layout_width="20px"
-            android:layout_height="30dp" />
+            android:layout_height="20dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -137,5 +139,30 @@
                 android:layout_width="40dp"
                 android:layout_height="20px" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="20px"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List of channnels currently in use"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20dp" />
+
+        <Space
+            android:layout_width="20px"
+            android:layout_height="20px" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listView_channels"
+            android:layout_gravity="center_horizontal"
+            android:verticalScrollbarPosition="defaultPosition" />
+
     </LinearLayout>
+
 </RelativeLayout>

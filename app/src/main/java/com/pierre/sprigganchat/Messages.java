@@ -1,12 +1,15 @@
 package com.pierre.sprigganchat;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -27,6 +30,7 @@ public class Messages extends AppCompatActivity {
     {
         try{
             socket = IO.socket("http://spriggan.fr:3000/");
+            //socket = IO.socket("http://192.168.0.40:3000/");
         }catch(URISyntaxException e){
             throw new RuntimeException(e);
         }
@@ -34,6 +38,7 @@ public class Messages extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_messages);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,7 +46,7 @@ public class Messages extends AppCompatActivity {
         /*
          * =========== INITIALIZATION ===========
          */
-        final ListView listView = (ListView) findViewById(R.id.listView_chat);
+        //final ListView listView = (ListView) findViewById(R.id.listView_chat);
         Bundle extras = getIntent().getExtras();
         String nickname="";
         String channel="";
@@ -51,8 +56,15 @@ public class Messages extends AppCompatActivity {
         }
         final String finalNickname = nickname;
         final String finalChannel = channel;
+        this.setTitle("#"+finalChannel);
         //final ArrayList<HashMap<String,String>> list_messages = new ArrayList<HashMap<String, String>>();
         final ArrayList<String> messages = new ArrayList<>();
+        final TextView chat=(TextView)findViewById(R.id.textView_chat);
+        TextView message = (TextView) findViewById(R.id.editText_message);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(message, InputMethodManager.SHOW_IMPLICIT);
+        chat.setMovementMethod(new ScrollingMovementMethod());
+        final String[] lastMessage = {""};
 
          /*
          * =========== SOCKET LISTENING ===========
@@ -70,60 +82,46 @@ public class Messages extends AppCompatActivity {
                 socket.emit("connect user", obj);
             }
         }).on("chat message", new Emitter.Listener() {
-            //@TODO: check the channel
             @Override
             public void call(Object... args) {
                 JSONObject obj = (JSONObject) args[0];
-                //Log.i("json", obj.toString());
-                //ListView listView=(ListView)findViewById(R.id.listView_messages);
-                /*HashMap<String, String> ligne = new HashMap<String, String>();
-                try{
-                    ligne.put("nickname",obj.getString("pseudo"));
-                    ligne.put("message",obj.getString("msg"));
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }*/
                 try {
                     Log.i("channel",obj.getString("channel").trim()+ " : "+finalChannel.trim());
                     if(obj.getString("channel").equals(finalChannel)){
-                        messages.add(obj.getString("nickname") + " : " + obj.getString("msg"));
+                        //messages.add(obj.getString("nickname") + " : " + obj.getString("msg"));
+                        lastMessage[0] ="<"+obj.getString("nickname")+">" + " : " + obj.getString("msg")+"\n";
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                writeMessage(chat,lastMessage[0]);
+                            }
+                        });
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(Messages.this,
-                                android.R.layout.simple_list_item_1, messages);
-                        listView.setAdapter(adapter);
-                        listView.setSelection(adapter.getCount() - 1);
-                    }
-                });
+
             }
         }).on("connect user", new Emitter.Listener() {
 
             @Override
             public void call(Object... args) {
-                JSONObject obj = (JSONObject)args[0];
+                JSONObject obj = (JSONObject) args[0];
                 try {
-                    if(obj.getString("channel").equals(finalChannel)){
-                        messages.add(obj.getString("nickname") + " just joined");
+                    if (obj.getString("channel").equals(finalChannel)) {
+                        //messages.add(obj.getString("nickname") + " just joined");
+                        lastMessage[0] = obj.getString("nickname") + " just joined" + "\n";
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                writeMessage(chat,lastMessage[0]);
+                            }
+                        });
                     }
-                }catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(Messages.this,
-                                android.R.layout.simple_list_item_1, messages);
-                        listView.setAdapter(adapter);
-                        listView.setSelection(adapter.getCount() -1);
-                    }
-                });
+
             }
         }).on("disconnect user", new Emitter.Listener() {
 
@@ -132,21 +130,18 @@ public class Messages extends AppCompatActivity {
                 JSONObject obj = (JSONObject)args[0];
                 try {
                     if(obj.getString("channel").equals(finalChannel)){
-                        messages.add(obj.getString("nickname") + " just left");
+                        //messages.add(obj.getString("nickname") + " just left");
+                        lastMessage[0] = obj.getString("nickname") + " just left" + "\n";
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                writeMessage(chat, lastMessage[0]);
+                            }
+                        });
                     }
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(Messages.this,
-                                android.R.layout.simple_list_item_1, messages);
-                        listView.setAdapter(adapter);
-                        listView.setSelection(adapter.getCount() -1);
-                    }
-                });
             }
         });
         socket.connect();
@@ -160,21 +155,43 @@ public class Messages extends AppCompatActivity {
                                 {
                                     @Override
                                     public void onClick(View v) {
-                                        TextView message = (TextView) findViewById(R.id.editText_message);
-                                        JSONObject send = new JSONObject();
-                                        try {
-                                            send.put("channel", finalChannel);
-                                            send.put("msg", message.getText().toString());
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        Log.i("json", send.toString());
-                                        socket.emit("chat message", send);
-                                        message.setText("");
-                                    }
-                                }
-
-        );
+                TextView message = (TextView) findViewById(R.id.editText_message);
+                JSONObject send = new JSONObject();
+                try {
+                    send.put("channel", finalChannel);
+                    send.put("msg", message.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.i("json", send.toString());
+                socket.emit("chat message", send);
+                message.setText("");
+            }
         }
 
+        );
+
+
     }
+
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        this.finish();
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        socket.disconnect();
+    }
+    public void writeMessage(TextView chat,String lastMessage){
+        chat.append(lastMessage);
+        final int scrollAmount = chat.getLayout().getLineTop(chat.getLineCount()) - chat.getHeight();
+        // if there is no need to scroll, scrollAmount will be <=0
+        if (scrollAmount > 0)
+            chat.scrollTo(0, scrollAmount);
+        else
+            chat.scrollTo(0, 0);
+    }
+}
